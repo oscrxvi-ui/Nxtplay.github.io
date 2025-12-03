@@ -1,0 +1,2482 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NextPlay VR - Advanced Training Analytics</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0a0a0a;
+            color: #ffffff;
+            line-height: 1.6;
+        }
+
+        /* Top Navigation */
+        .navbar {
+            background: #1a1a1a;
+            border-bottom: 1px solid #2a2a2a;
+            padding: 0 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 70px;
+        }
+
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .logo-icon {
+            width: 140px;
+            height: auto;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .nav-link {
+            color: #b0b0b0;
+            text-decoration: none;
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .nav-link:hover {
+            color: #ffffff;
+        }
+
+        .profile-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #0066cc, #004d99);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .profile-avatar:hover {
+            transform: scale(1.05);
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 2.5rem 2rem;
+        }
+
+        /* Three Panel Grid */
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 1.5fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        /* Left Panel - Feature Buttons */
+        .feature-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .feature-tile {
+            background: #1a1a1a;
+            border: 1px solid #2a2a2a;
+            padding: 2rem;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .feature-tile:hover {
+            background: #222222;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+        }
+
+        .feature-tile:active {
+            transform: translateY(0);
+        }
+
+        .feature-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 6px;
+            background: #0066cc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            flex-shrink: 0;
+        }
+
+        .feature-content h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .feature-content p {
+            font-size: 0.85rem;
+            color: #888888;
+        }
+
+        /* Center Panel - Featured Play */
+        .featured-play {
+            background: #1a1a1a;
+            border: 1px solid #2a2a2a;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        .featured-header {
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid #2a2a2a;
+        }
+
+        .featured-header h2 {
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+
+        .featured-header p {
+            font-size: 0.9rem;
+            color: #888888;
+            margin-top: 0.25rem;
+        }
+
+        .play-card {
+            padding: 2rem;
+        }
+
+        .play-diagram {
+            background: #121212;
+            border: 1px solid #2a2a2a;
+            border-radius: 4px;
+            height: 280px;
+            margin-bottom: 1.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .play-diagram canvas {
+            width: 100%;
+            height: 100%;
+        }
+
+        .play-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+
+        .stat-item {
+            background: #121212;
+            padding: 1rem;
+            border-radius: 4px;
+            border: 1px solid #2a2a2a;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: #888888;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-value {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #ffffff;
+        }
+
+        /* Right Panel - Analytics */
+        .analytics-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .player-snapshot {
+            background: #1a1a1a;
+            border: 1px solid #2a2a2a;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        .snapshot-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid #2a2a2a;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .player-photo {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 2px solid #0066cc;
+            flex-shrink: 0;
+        }
+
+        .player-photo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+        }
+
+        .player-info h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .player-info p {
+            font-size: 0.85rem;
+            color: #888888;
+        }
+
+        .performance-metrics {
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .metric-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid #2a2a2a;
+        }
+
+        .metric-row:last-child {
+            border-bottom: none;
+        }
+
+        .metric-label {
+            font-size: 0.9rem;
+            color: #b0b0b0;
+        }
+
+        .metric-value {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #ffffff;
+        }
+
+        .metric-value.elite {
+            color: #0066cc;
+        }
+
+        /* Speed Selector */
+        .speed-selector {
+            background: #1a1a1a;
+            border: 1px solid #2a2a2a;
+            border-radius: 6px;
+            padding: 1.5rem;
+        }
+
+        .speed-selector h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .speed-buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0.75rem;
+        }
+
+        .speed-btn {
+            background: #121212;
+            border: 1px solid #2a2a2a;
+            color: #b0b0b0;
+            padding: 0.75rem;
+            border-radius: 4px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .speed-btn:hover {
+            background: #1a1a1a;
+            border-color: #0066cc;
+            color: #ffffff;
+        }
+
+        .speed-btn.active {
+            background: #0066cc;
+            border-color: #0066cc;
+            color: #ffffff;
+            box-shadow: 0 2px 8px rgba(0, 102, 204, 0.3);
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 2rem;
+            color: #555555;
+            font-size: 0.9rem;
+            border-top: 1px solid #2a2a2a;
+            margin-top: 3rem;
+        }
+
+        /* Analytics Dashboard Styles */
+        .analytics-dashboard {
+            display: none;
+        }
+
+        .analytics-dashboard.active {
+            display: block;
+        }
+
+        /* Next Play Selection Styles */
+        .next-play-page {
+            display: none;
+        }
+
+        .next-play-page.active {
+            display: block;
+        }
+
+        /* Recent Plays Page Styles */
+        .recent-plays-page {
+            display: none;
+        }
+
+        .recent-plays-page.active {
+            display: block;
+        }
+
+        /* Players Page Styles */
+        .players-page {
+            display: none;
+        }
+
+        .players-page.active {
+            display: block;
+        }
+
+        .players-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+        }
+
+        .player-card {
+            background: #1a1a1a;
+            border: 2px solid #2a2a2a;
+            border-radius: 6px;
+            overflow: hidden;
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+
+        .player-card:hover {
+            border-color: #0066cc;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+        }
+
+        .player-card-header {
+            padding: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            border-bottom: 1px solid #2a2a2a;
+        }
+
+        .player-avatar-large {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 3px solid #0066cc;
+            flex-shrink: 0;
+            background: linear-gradient(135deg, #0066cc, #004d99);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #ffffff;
+            position: relative;
+        }
+
+        .player-avatar-large img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+        }
+
+        .player-card-info {
+            flex: 1;
+        }
+
+        .player-card-name {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .player-card-position {
+            font-size: 0.9rem;
+            color: #888888;
+            margin-bottom: 0.25rem;
+        }
+
+        .player-card-number {
+            font-size: 0.85rem;
+            color: #0066cc;
+            font-weight: 600;
+        }
+
+        .player-stats-section {
+            padding: 1.5rem;
+        }
+
+        .player-stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+
+        .player-stat-item {
+            background: #121212;
+            padding: 0.75rem;
+            border-radius: 4px;
+        }
+
+        .player-stat-label {
+            font-size: 0.75rem;
+            color: #888888;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.25rem;
+        }
+
+        .player-stat-value {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #ffffff;
+        }
+
+        .player-overall-rating {
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid #2a2a2a;
+        }
+
+        .rating-label {
+            font-size: 0.85rem;
+            color: #888888;
+            margin-bottom: 0.5rem;
+        }
+
+        .rating-bar {
+            height: 8px;
+            background: #121212;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 0.5rem;
+        }
+
+        .rating-bar-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+
+        .rating-bar-fill.elite {
+            background: linear-gradient(90deg, #00aa55, #00cc66);
+        }
+
+        .rating-bar-fill.high {
+            background: linear-gradient(90deg, #0066cc, #0088ff);
+        }
+
+        .rating-bar-fill.medium {
+            background: linear-gradient(90deg, #dd8800, #ffaa00);
+        }
+
+        .rating-bar-fill.developing {
+            background: linear-gradient(90deg, #888888, #aaaaaa);
+        }
+
+        .rating-value {
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .rating-value.elite {
+            color: #00cc66;
+        }
+
+        .rating-value.high {
+            color: #0088ff;
+        }
+
+        .rating-value.medium {
+            color: #ffaa00;
+        }
+
+        .rating-value.developing {
+            color: #aaaaaa;
+        }
+
+        .recent-plays-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .recent-play-card {
+            background: #1a1a1a;
+            border: 2px solid #2a2a2a;
+            border-radius: 6px;
+            overflow: hidden;
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+
+        .recent-play-card:hover {
+            border-color: #0066cc;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .recent-play-card.expanded {
+            border-color: #0066cc;
+        }
+
+        .recent-play-header {
+            padding: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .recent-play-info {
+            flex: 1;
+        }
+
+        .recent-play-name {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .recent-play-meta {
+            font-size: 0.85rem;
+            color: #888888;
+            display: flex;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .recent-play-summary {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .recent-play-result {
+            text-align: right;
+        }
+
+        .result-label {
+            font-size: 0.75rem;
+            color: #888888;
+            text-transform: uppercase;
+            margin-bottom: 0.25rem;
+        }
+
+        .result-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .result-value.success {
+            color: #00cc66;
+        }
+
+        .result-value.warning {
+            color: #ffaa00;
+        }
+
+        .result-value.error {
+            color: #ff4444;
+        }
+
+        .expand-icon {
+            font-size: 1.2rem;
+            color: #666666;
+            transition: transform 0.2s;
+        }
+
+        .recent-play-card.expanded .expand-icon {
+            transform: rotate(180deg);
+        }
+
+        .recent-play-details {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .recent-play-card.expanded .recent-play-details {
+            max-height: 1000px;
+        }
+
+        .details-content {
+            padding: 0 1.5rem 1.5rem 1.5rem;
+            border-top: 1px solid #2a2a2a;
+        }
+
+        .details-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .detail-section {
+            background: #121212;
+            padding: 1.25rem;
+            border-radius: 4px;
+        }
+
+        .detail-section h4 {
+            font-size: 0.8rem;
+            color: #888888;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 1rem;
+        }
+
+        .detail-stat {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.75rem;
+        }
+
+        .detail-stat:last-child {
+            margin-bottom: 0;
+        }
+
+        .detail-stat-label {
+            font-size: 0.9rem;
+            color: #b0b0b0;
+        }
+
+        .detail-stat-value {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #ffffff;
+        }
+
+        .page-header {
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .page-header h1 {
+            font-size: 2rem;
+            font-weight: 700;
+        }
+
+        .page-header p {
+            color: #888888;
+            font-size: 1rem;
+            margin-top: 0.5rem;
+        }
+
+        .plays-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .play-card-select {
+            background: #1a1a1a;
+            border: 2px solid #2a2a2a;
+            border-radius: 6px;
+            padding: 1.5rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .play-card-select:hover {
+            border-color: #0066cc;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+        }
+
+        .play-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .play-name {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .play-type-badge {
+            background: #0066cc;
+            color: #ffffff;
+            padding: 0.25rem 0.75rem;
+            border-radius: 3px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .play-stats-mini {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .mini-stat {
+            background: #121212;
+            padding: 0.75rem;
+            border-radius: 4px;
+        }
+
+        .mini-stat-label {
+            font-size: 0.75rem;
+            color: #666666;
+            text-transform: uppercase;
+            margin-bottom: 0.25rem;
+        }
+
+        .mini-stat-value {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .performance-bar-container {
+            margin-top: 1rem;
+        }
+
+        .performance-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .performance-label-text {
+            color: #888888;
+        }
+
+        .performance-percentage {
+            font-weight: 600;
+        }
+
+        .performance-percentage.high {
+            color: #00cc66;
+        }
+
+        .performance-percentage.medium {
+            color: #ffaa00;
+        }
+
+        .performance-percentage.low {
+            color: #ff4444;
+        }
+
+        .performance-bar {
+            height: 8px;
+            background: #121212;
+            border-radius: 4px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .performance-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #0066cc, #0088ff);
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+
+        .performance-bar-fill.high {
+            background: linear-gradient(90deg, #00aa55, #00cc66);
+        }
+
+        .performance-bar-fill.medium {
+            background: linear-gradient(90deg, #dd8800, #ffaa00);
+        }
+
+        .performance-bar-fill.low {
+            background: linear-gradient(90deg, #cc3333, #ff4444);
+        }
+
+        .improvement-note {
+            font-size: 0.8rem;
+            color: #ffaa00;
+            margin-top: 0.5rem;
+            font-style: italic;
+        }
+
+        .dashboard-header {
+            margin-bottom: 2rem;
+        }
+
+        .dashboard-header h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .dashboard-header p {
+            color: #888888;
+            font-size: 1rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: #1a1a1a;
+            border: 1px solid #2a2a2a;
+            border-radius: 6px;
+            padding: 1.5rem;
+        }
+
+        .stat-card-label {
+            font-size: 0.85rem;
+            color: #888888;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.75rem;
+        }
+
+        .stat-card-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-card-change {
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .stat-card-change.positive {
+            color: #00cc66;
+        }
+
+        .stat-card-change.negative {
+            color: #ff4444;
+        }
+
+        .charts-section {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .chart-card {
+            background: #1a1a1a;
+            border: 1px solid #2a2a2a;
+            border-radius: 6px;
+            padding: 1.5rem;
+        }
+
+        .chart-card h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+        }
+
+        .chart-container {
+            height: 300px;
+            position: relative;
+        }
+
+        .chart-container canvas {
+            width: 100%;
+            height: 100%;
+        }
+
+        .recent-plays {
+            background: #1a1a1a;
+            border: 1px solid #2a2a2a;
+            border-radius: 6px;
+            padding: 1.5rem;
+        }
+
+        .recent-plays h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+        }
+
+        .play-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .play-item {
+            background: #121212;
+            border: 1px solid #2a2a2a;
+            border-radius: 4px;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.2s;
+        }
+
+        .play-item:hover {
+            background: #1a1a1a;
+            border-color: #0066cc;
+        }
+
+        .play-item-info {
+            flex: 1;
+        }
+
+        .play-item-type {
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .play-item-details {
+            font-size: 0.8rem;
+            color: #888888;
+        }
+
+        .play-item-success {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #00cc66;
+        }
+
+        .play-item-success.medium {
+            color: #ffaa00;
+        }
+
+        .play-item-success.low {
+            color: #ff4444;
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .navbar {
+                padding: 0 1.5rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .charts-section {
+                grid-template-columns: 1fr;
+            }
+
+            .plays-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .details-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .players-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Navigation -->
+    <nav class="navbar">
+        <div class="nav-left">
+            <div class="logo-container">
+                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 80'%3E%3Ctext x='0' y='55' font-family='Inter, sans-serif' font-size='36' font-weight='700' fill='%23ffffff'%3ENXTPLAY%3C/text%3E%3Ctext x='250' y='55' font-family='Inter, sans-serif' font-size='36' font-weight='700' fill='%230066cc'%3EVR%3C/text%3E%3C/svg%3E" alt="NextPlay VR" class="logo-icon">
+            </div>
+        </div>
+        <div class="nav-right">
+            <a href="#" class="nav-link" onclick="backToDashboard(); return false;">Dashboard</a>
+            <a href="#" class="nav-link" onclick="showPlayersPage(); return false;">Players</a>
+            <a href="#" class="nav-link">Settings</a>
+            <div class="profile-avatar">BP</div>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Main Dashboard View -->
+        <div class="main-grid" id="mainDashboard">
+            <!-- Left Panel: Feature Buttons -->
+            <div class="feature-buttons">
+                <div class="feature-tile" onclick="handleFeatureClick('next')">
+                    <div class="feature-icon">▶</div>
+                    <div class="feature-content">
+                        <h3>Next Play</h3>
+                        <p>Load next training sequence</p>
+                    </div>
+                </div>
+
+                <div class="feature-tile" onclick="handleFeatureClick('recent')">
+                    <div class="feature-icon">⟲</div>
+                    <div class="feature-content">
+                        <h3>Recent Play</h3>
+                        <p>Review last executed play</p>
+                    </div>
+                </div>
+
+                <div class="feature-tile" onclick="handleFeatureClick('analytics')">
+                    <div class="feature-icon">📊</div>
+                    <div class="feature-content">
+                        <h3>Analytics Dashboard</h3>
+                        <p>View detailed performance data</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Center Panel: Featured Play -->
+            <div class="featured-play">
+                <div class="featured-header">
+                    <h2>Latest Recorded Play</h2>
+                    <p>Week 12 • Practice Session</p>
+                </div>
+                <div class="play-card">
+                    <div class="play-diagram">
+                        <canvas id="playCanvas"></canvas>
+                    </div>
+                    <div class="play-stats">
+                        <div class="stat-item">
+                            <div class="stat-label">Play Type</div>
+                            <div class="stat-value">Pass (Slant)</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-label">Down & Distance</div>
+                            <div class="stat-value">2nd & 7</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-label">Yardage</div>
+                            <div class="stat-value">+12 yds</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-label">Success Rate</div>
+                            <div class="stat-value">94.2%</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Panel: Player Analytics -->
+            <div class="analytics-panel">
+                <div class="player-snapshot">
+                    <div class="snapshot-header">
+                        <div class="player-photo">
+                            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='50' fill='%230066cc'/%3E%3Ctext x='50' y='60' font-family='Arial' font-size='36' font-weight='bold' fill='white' text-anchor='middle'%3EBP%3C/text%3E%3C/svg%3E" alt="Player Photo">
+                        </div>
+                        <div class="player-info">
+                            <h3>Brock Purdy</h3>
+                            <p>Performance Snapshot</p>
+                        </div>
+                    </div>
+                    <div class="performance-metrics">
+                        <div class="metric-row">
+                            <span class="metric-label">Speed</span>
+                            <span class="metric-value">20.3 mph</span>
+                        </div>
+                        <div class="metric-row">
+                            <span class="metric-label">Acceleration</span>
+                            <span class="metric-value elite">Elite</span>
+                        </div>
+                        <div class="metric-row">
+                            <span class="metric-label">Reaction Time</span>
+                            <span class="metric-value">0.23s</span>
+                        </div>
+                        <div class="metric-row">
+                            <span class="metric-label">Play Count</span>
+                            <span class="metric-value">87</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="speed-selector">
+                    <h3>Training Speed</h3>
+                    <div class="speed-buttons">
+                        <button class="speed-btn active" onclick="setSpeed(1)">1x</button>
+                        <button class="speed-btn" onclick="setSpeed(2)">2x</button>
+                        <button class="speed-btn" onclick="setSpeed(3)">3x</button>
+                        <button class="speed-btn" onclick="setSpeed(4)">4x</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Next Play Selection Page -->
+        <div class="next-play-page" id="nextPlayPage">
+            <div class="page-header">
+                <div>
+                    <h1>Select Training Play</h1>
+                    <p>Choose a play to practice • Brock Purdy</p>
+                </div>
+            </div>
+
+            <div class="plays-grid" id="playsGrid">
+                <!-- Plays will be generated by JavaScript -->
+            </div>
+        </div>
+
+        <!-- Recent Plays Page -->
+        <div class="recent-plays-page" id="recentPlaysPage">
+            <div class="page-header">
+                <div>
+                    <h1>Recent Training Plays</h1>
+                    <p>Review past performance • Brock Purdy</p>
+                </div>
+            </div>
+
+            <div class="recent-plays-list" id="recentPlaysList">
+                <!-- Recent plays will be generated by JavaScript -->
+            </div>
+        </div>
+
+        <!-- Players Page -->
+        <div class="players-page" id="playersPage">
+            <div class="page-header">
+                <div>
+                    <h1>49ers Roster</h1>
+                    <p>View team performance analytics</p>
+                </div>
+            </div>
+
+            <div class="players-grid" id="playersGrid">
+                <!-- Players will be generated by JavaScript -->
+            </div>
+        </div>
+
+        <!-- Analytics Dashboard View -->
+        <div class="analytics-dashboard" id="analyticsDashboard">
+            <div class="dashboard-header">
+                <h1>Performance Analytics</h1>
+                <p>Brock Purdy • Week 12 Training Session</p>
+            </div>
+
+            <!-- Stats Overview -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-card-label">Total Plays</div>
+                    <div class="stat-card-value">87</div>
+                    <div class="stat-card-change positive">↑ 12% vs last week</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card-label">Avg Success Rate</div>
+                    <div class="stat-card-value">91.3%</div>
+                    <div class="stat-card-change positive">↑ 5.2%</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card-label">Reaction Time</div>
+                    <div class="stat-card-value">0.23s</div>
+                    <div class="stat-card-change positive">↓ 0.03s</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card-label">Training Hours</div>
+                    <div class="stat-card-value">4.2h</div>
+                    <div class="stat-card-change negative">↓ 8%</div>
+                </div>
+            </div>
+
+            <!-- Charts Section -->
+            <div class="charts-section">
+                <div class="chart-card">
+                    <h3>Success Rate Over Time</h3>
+                    <div class="chart-container">
+                        <canvas id="lineChart"></canvas>
+                    </div>
+                </div>
+                <div class="chart-card">
+                    <h3>Play Type Distribution</h3>
+                    <div class="chart-container">
+                        <canvas id="pieChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Plays -->
+            <div class="recent-plays">
+                <h3>Recent Training Plays</h3>
+                <div class="play-list" id="playList">
+                    <!-- Plays will be generated by JavaScript -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        NextPlay VR — Advanced Training Analytics
+    </footer>
+
+    <script>
+        // 49ers Players Data
+        const fortyNinersPlayers = [
+            {
+                name: 'Brock Purdy',
+                position: 'Quarterback',
+                number: 13,
+                initials: 'BP',
+                imageUrl: 'https://a.espncdn.com/combiner/i?img=/i/headshots/nfl/players/full/4361741.png&w=350&h=254',
+                stats: {
+                    speed: '20.3 mph',
+                    acceleration: 'Elite',
+                    reactionTime: '0.23s',
+                    playCount: 87
+                },
+                rating: 94
+            },
+            {
+                name: 'Christian McCaffrey',
+                position: 'Running Back',
+                number: 23,
+                initials: 'CM',
+                imageUrl: 'https://a.espncdn.com/combiner/i?img=/i/headshots/nfl/players/full/3116385.png&w=350&h=254',
+                stats: {
+                    speed: '22.1 mph',
+                    acceleration: 'Elite',
+                    agility: '9.8/10',
+                    playCount: 112
+                },
+                rating: 96
+            },
+            {
+                name: 'Deebo Samuel',
+                position: 'Wide Receiver',
+                number: 19,
+                initials: 'DS',
+                imageUrl: 'https://a.espncdn.com/combiner/i?img=/i/headshots/nfl/players/full/3929861.png&w=350&h=254',
+                stats: {
+                    speed: '21.5 mph',
+                    catchRate: '87%',
+                    routeSharp: '9.2/10',
+                    playCount: 95
+                },
+                rating: 91
+            },
+            {
+                name: 'George Kittle',
+                position: 'Tight End',
+                number: 85,
+                initials: 'GK',
+                imageUrl: 'https://a.espncdn.com/combiner/i?img=/i/headshots/nfl/players/full/3116406.png&w=350&h=254',
+                stats: {
+                    speed: '19.8 mph',
+                    catchRate: '92%',
+                    blocking: '9.5/10',
+                    playCount: 88
+                },
+                rating: 93
+            },
+            {
+                name: 'Nick Bosa',
+                position: 'Defensive End',
+                number: 97,
+                initials: 'NB',
+                imageUrl: 'https://a.espncdn.com/combiner/i?img=/i/headshots/nfl/players/full/3912547.png&w=350&h=254',
+                stats: {
+                    speed: '20.7 mph',
+                    acceleration: 'Elite',
+                    pressure: '15.2%',
+                    playCount: 104
+                },
+                rating: 97
+            },
+            {
+                name: 'Fred Warner',
+                position: 'Linebacker',
+                number: 54,
+                initials: 'FW',
+                imageUrl: 'https://a.espncdn.com/combiner/i?img=/i/headshots/nfl/players/full/3128720.png&w=350&h=254',
+                stats: {
+                    speed: '21.3 mph',
+                    tackling: '9.6/10',
+                    coverage: '9.1/10',
+                    playCount: 118
+                },
+                rating: 95
+            },
+            {
+                name: 'Trent Williams',
+                position: 'Offensive Tackle',
+                number: 71,
+                initials: 'TW',
+                imageUrl: 'https://a.espncdn.com/combiner/i?img=/i/headshots/nfl/players/full/13982.png&w=350&h=254',
+                stats: {
+                    strength: '9.8/10',
+                    blocking: '9.7/10',
+                    technique: '9.5/10',
+                    playCount: 92
+                },
+                rating: 98
+            },
+            {
+                name: 'Brandon Aiyuk',
+                position: 'Wide Receiver',
+                number: 11,
+                initials: 'BA',
+                imageUrl: 'https://a.espncdn.com/combiner/i?img=/i/headshots/nfl/players/full/4241985.png&w=350&h=254',
+                stats: {
+                    speed: '21.2 mph',
+                    catchRate: '84%',
+                    separation: '8.9/10',
+                    playCount: 81
+                },
+                rating: 88
+            },
+            {
+                name: 'Javon Hargrave',
+                position: 'Defensive Tackle',
+                number: 98,
+                initials: 'JH',
+                imageUrl: 'https://a.espncdn.com/combiner/i?img=/i/headshots/nfl/players/full/3043078.png&w=350&h=254',
+                stats: {
+                    strength: '9.6/10',
+                    pressure: '12.8%',
+                    tackling: '8.9/10',
+                    playCount: 96
+                },
+                rating: 89
+            },
+            {
+                name: 'Charvarius Ward',
+                position: 'Cornerback',
+                number: 7,
+                initials: 'CW',
+                imageUrl: 'https://a.espncdn.com/combiner/i?img=/i/headshots/nfl/players/full/3116593.png&w=350&h=254',
+                stats: {
+                    speed: '21.8 mph',
+                    coverage: '9.3/10',
+                    interceptions: 4,
+                    playCount: 102
+                },
+                rating: 90
+            },
+            {
+                name: 'Jake Moody',
+                position: 'Kicker',
+                number: 4,
+                initials: 'JM',
+                imageUrl: 'https://a.espncdn.com/combiner/i?img=/i/headshots/nfl/players/full/4430737.png&w=350&h=254',
+                stats: {
+                    accuracy: '88%',
+                    longFG: '57 yds',
+                    kickPower: '9.1/10',
+                    playCount: 45
+                },
+                rating: 82
+            },
+            {
+                name: 'Mitch Wishnowsky',
+                position: 'Punter',
+                number: 18,
+                initials: 'MW',
+                imageUrl: 'https://a.espncdn.com/combiner/i?img=/i/headshots/nfl/players/full/3915511.png&w=350&h=254',
+                stats: {
+                    avgDistance: '48.2 yds',
+                    hangTime: '4.6s',
+                    accuracy: '9.0/10',
+                    playCount: 38
+                },
+                rating: 85
+            }
+        ];
+
+        // Generate players grid
+        function generatePlayersGrid() {
+            const playersGrid = document.getElementById('playersGrid');
+            if (!playersGrid) return;
+
+            playersGrid.innerHTML = '';
+
+            fortyNinersPlayers.forEach(player => {
+                const playerCard = document.createElement('div');
+                playerCard.className = 'player-card';
+                playerCard.onclick = () => selectPlayer(player);
+
+                let ratingClass = 'high';
+                if (player.rating >= 95) ratingClass = 'elite';
+                else if (player.rating >= 90) ratingClass = 'high';
+                else if (player.rating >= 80) ratingClass = 'medium';
+                else ratingClass = 'developing';
+
+                // Build stats HTML
+                const statsEntries = Object.entries(player.stats);
+                const statsHTML = statsEntries.map(([key, value]) => `
+                    <div class="player-stat-item">
+                        <div class="player-stat-label">${key}</div>
+                        <div class="player-stat-value">${value}</div>
+                    </div>
+                `).join('');
+
+                playerCard.innerHTML = `
+                    <div class="player-card-header">
+                        <div class="player-avatar-large">
+                            <img src="${player.imageUrl}" alt="${player.name}" onerror="this.style.display='none'; this.parentElement.innerHTML='${player.initials}';">
+                        </div>
+                        <div class="player-card-info">
+                            <div class="player-card-name">${player.name}</div>
+                            <div class="player-card-position">${player.position}</div>
+                            <div class="player-card-number">#${player.number}</div>
+                        </div>
+                    </div>
+                    <div class="player-stats-section">
+                        <div class="player-stats-grid">
+                            ${statsHTML}
+                        </div>
+                        <div class="player-overall-rating">
+                            <div class="rating-label">Overall Rating</div>
+                            <div class="rating-bar">
+                                <div class="rating-bar-fill ${ratingClass}" style="width: ${player.rating}%"></div>
+                            </div>
+                            <div class="rating-value ${ratingClass}">${player.rating}/100</div>
+                        </div>
+                    </div>
+                `;
+
+                playersGrid.appendChild(playerCard);
+            });
+        }
+
+        // Handle player selection
+        function selectPlayer(player) {
+            console.log('Selected player:', player.name);
+            alert(`Player Profile: ${player.name}\n\nPosition: ${player.position}\nNumber: #${player.number}\nOverall Rating: ${player.rating}/100\n\nClick to view detailed analytics (coming soon)`);
+        }
+
+        // Show players page
+        function showPlayersPage() {
+            document.getElementById('mainDashboard').style.display = 'none';
+            document.getElementById('analyticsDashboard').classList.remove('active');
+            document.getElementById('nextPlayPage').classList.remove('active');
+            document.getElementById('recentPlaysPage').classList.remove('active');
+            document.getElementById('playersPage').classList.add('active');
+            generatePlayersGrid();
+        }
+
+        // Historical play data generator
+        const historicalPlayTypes = [
+            { name: 'Slant Route', type: 'Pass', avgSuccess: [85, 95] },
+            { name: 'Out Route', type: 'Pass', avgSuccess: [80, 92] },
+            { name: 'Corner Route', type: 'Pass', avgSuccess: [78, 90] },
+            { name: 'Deep Ball', type: 'Pass', avgSuccess: [55, 75] },
+            { name: 'Screen Pass', type: 'Pass', avgSuccess: [88, 98] },
+            { name: 'Play Action', type: 'Pass', avgSuccess: [82, 94] },
+            { name: 'RPO', type: 'Dual', avgSuccess: [70, 85] },
+            { name: 'Bootleg', type: 'Pass', avgSuccess: [75, 88] },
+            { name: 'Red Zone Fade', type: 'Pass', avgSuccess: [50, 70] },
+            { name: 'Quick Slant', type: 'Pass', avgSuccess: [86, 96] },
+            { name: 'Wheel Route', type: 'Pass', avgSuccess: [58, 72] },
+            { name: 'Crossing Route', type: 'Pass', avgSuccess: [80, 92] }
+        ];
+
+        function generateHistoricalPlay() {
+            const play = historicalPlayTypes[Math.floor(Math.random() * historicalPlayTypes.length)];
+            const success = Math.floor(Math.random() * (play.avgSuccess[1] - play.avgSuccess[0] + 1)) + play.avgSuccess[0];
+            const downs = ['1st & 10', '2nd & 7', '2nd & 5', '3rd & 3', '3rd & 8', '3rd & 5', '2nd & 12', '1st & 15'];
+            const yards = Math.floor(Math.random() * 30) - 2;
+            const speeds = [18.2, 19.5, 20.1, 20.8, 21.3, 19.8, 20.5];
+            const reactionTimes = [0.18, 0.21, 0.23, 0.25, 0.19, 0.22, 0.24];
+            const completionPct = Math.floor(Math.random() * 40) + 60;
+            const throwPower = Math.floor(Math.random() * 15) + 50;
+            const decisionTime = (Math.random() * 1.5 + 1.2).toFixed(2);
+
+            const daysAgo = Math.floor(Math.random() * 14) + 1;
+            const date = new Date();
+            date.setDate(date.getDate() - daysAgo);
+
+            return {
+                name: play.name,
+                type: play.type,
+                success: success,
+                down: downs[Math.floor(Math.random() * downs.length)],
+                yards: yards,
+                date: date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+                time: date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }),
+                speed: speeds[Math.floor(Math.random() * speeds.length)],
+                reactionTime: reactionTimes[Math.floor(Math.random() * reactionTimes.length)],
+                completionPct: completionPct,
+                throwPower: throwPower,
+                decisionTime: decisionTime,
+                daysAgo: daysAgo
+            };
+        }
+
+        // Generate recent plays list with expandable details
+        function generateRecentPlaysList() {
+            const recentPlaysList = document.getElementById('recentPlaysList');
+            if (!recentPlaysList) return;
+
+            recentPlaysList.innerHTML = '';
+
+            for (let i = 0; i < 15; i++) {
+                const play = generateHistoricalPlay();
+                const playCard = document.createElement('div');
+                playCard.className = 'recent-play-card';
+                playCard.onclick = () => togglePlayDetails(playCard);
+
+                let resultClass = 'success';
+                if (play.success < 70) resultClass = 'error';
+                else if (play.success < 85) resultClass = 'warning';
+
+                let yardsDisplay = play.yards >= 0 ? `+${play.yards}` : play.yards;
+                let resultText = play.yards >= 0 ? 'COMPLETE' : 'INCOMPLETE';
+
+                playCard.innerHTML = `
+                    <div class="recent-play-header">
+                        <div class="recent-play-info">
+                            <div class="recent-play-name">${play.name}</div>
+                            <div class="recent-play-meta">
+                                <span>${play.date} at ${play.time}</span>
+                                <span>•</span>
+                                <span>${play.down}</span>
+                                <span>•</span>
+                                <span>${yardsDisplay} yards</span>
+                                <span>•</span>
+                                <span>${play.daysAgo} days ago</span>
+                            </div>
+                        </div>
+                        <div class="recent-play-summary">
+                            <div class="recent-play-result">
+                                <div class="result-label">Success Rate</div>
+                                <div class="result-value ${resultClass}">${play.success}%</div>
+                            </div>
+                            <div class="expand-icon">▼</div>
+                        </div>
+                    </div>
+                    <div class="recent-play-details">
+                        <div class="details-content">
+                            <div class="details-grid">
+                                <div class="detail-section">
+                                    <h4>Performance Metrics</h4>
+                                    <div class="detail-stat">
+                                        <span class="detail-stat-label">Max Speed</span>
+                                        <span class="detail-stat-value">${play.speed} mph</span>
+                                    </div>
+                                    <div class="detail-stat">
+                                        <span class="detail-stat-label">Reaction Time</span>
+                                        <span class="detail-stat-value">${play.reactionTime}s</span>
+                                    </div>
+                                    <div class="detail-stat">
+                                        <span class="detail-stat-label">Decision Time</span>
+                                        <span class="detail-stat-value">${play.decisionTime}s</span>
+                                    </div>
+                                </div>
+                                <div class="detail-section">
+                                    <h4>Execution Details</h4>
+                                    <div class="detail-stat">
+                                        <span class="detail-stat-label">Play Type</span>
+                                        <span class="detail-stat-value">${play.type}</span>
+                                    </div>
+                                    <div class="detail-stat">
+                                        <span class="detail-stat-label">Result</span>
+                                        <span class="detail-stat-value">${resultText}</span>
+                                    </div>
+                                    <div class="detail-stat">
+                                        <span class="detail-stat-label">Yardage</span>
+                                        <span class="detail-stat-value">${yardsDisplay} yds</span>
+                                    </div>
+                                </div>
+                                <div class="detail-section">
+                                    <h4>Throw Analytics</h4>
+                                    <div class="detail-stat">
+                                        <span class="detail-stat-label">Completion %</span>
+                                        <span class="detail-stat-value">${play.completionPct}%</span>
+                                    </div>
+                                    <div class="detail-stat">
+                                        <span class="detail-stat-label">Throw Power</span>
+                                        <span class="detail-stat-value">${play.throwPower} mph</span>
+                                    </div>
+                                    <div class="detail-stat">
+                                        <span class="detail-stat-label">Accuracy</span>
+                                        <span class="detail-stat-value">${play.success}%</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                recentPlaysList.appendChild(playCard);
+            }
+        }
+
+        // Toggle play details expansion
+        function togglePlayDetails(card) {
+            card.classList.toggle('expanded');
+        }
+
+        // Play templates with performance data
+        const playTemplates = [
+            { 
+                name: 'Slant Route', 
+                type: 'Pass', 
+                difficulty: 'Easy',
+                avgYards: '8-12',
+                performance: 94,
+                attempts: 45,
+                needsWork: false
+            },
+            { 
+                name: 'Out Route', 
+                type: 'Pass', 
+                difficulty: 'Medium',
+                avgYards: '6-10',
+                performance: 88,
+                attempts: 38,
+                needsWork: false
+            },
+            { 
+                name: 'Corner Route', 
+                type: 'Pass', 
+                difficulty: 'Medium',
+                avgYards: '12-18',
+                performance: 85,
+                attempts: 32,
+                needsWork: false
+            },
+            { 
+                name: 'Deep Ball', 
+                type: 'Pass', 
+                difficulty: 'Hard',
+                avgYards: '25-40',
+                performance: 62,
+                attempts: 28,
+                needsWork: true
+            },
+            { 
+                name: 'Screen Pass', 
+                type: 'Pass', 
+                difficulty: 'Easy',
+                avgYards: '5-8',
+                performance: 96,
+                attempts: 52,
+                needsWork: false
+            },
+            { 
+                name: 'Play Action', 
+                type: 'Pass', 
+                difficulty: 'Medium',
+                avgYards: '10-15',
+                performance: 90,
+                attempts: 41,
+                needsWork: false
+            },
+            { 
+                name: 'RPO (Run-Pass Option)', 
+                type: 'Dual', 
+                difficulty: 'Hard',
+                avgYards: '8-14',
+                performance: 78,
+                attempts: 35,
+                needsWork: false
+            },
+            { 
+                name: 'Bootleg', 
+                type: 'Pass', 
+                difficulty: 'Medium',
+                avgYards: '9-13',
+                performance: 83,
+                attempts: 29,
+                needsWork: false
+            },
+            { 
+                name: 'Red Zone Fade', 
+                type: 'Pass', 
+                difficulty: 'Hard',
+                avgYards: '8-12',
+                performance: 58,
+                attempts: 24,
+                needsWork: true
+            },
+            { 
+                name: 'Quick Slant (Hot Route)', 
+                type: 'Pass', 
+                difficulty: 'Easy',
+                avgYards: '5-7',
+                performance: 92,
+                attempts: 48,
+                needsWork: false
+            },
+            { 
+                name: 'Wheel Route', 
+                type: 'Pass', 
+                difficulty: 'Hard',
+                avgYards: '15-25',
+                performance: 65,
+                attempts: 22,
+                needsWork: true
+            },
+            { 
+                name: 'Crossing Route', 
+                type: 'Pass', 
+                difficulty: 'Medium',
+                avgYards: '8-12',
+                performance: 87,
+                attempts: 39,
+                needsWork: false
+            }
+        ];
+
+        // Generate play cards for Next Play page
+        function generatePlayCards() {
+            const playsGrid = document.getElementById('playsGrid');
+            if (!playsGrid) return;
+
+            playsGrid.innerHTML = '';
+
+            playTemplates.forEach((play, index) => {
+                const playCard = document.createElement('div');
+                playCard.className = 'play-card-select';
+                playCard.onclick = () => selectPlay(play);
+
+                let perfClass = 'high';
+                if (play.performance < 70) perfClass = 'low';
+                else if (play.performance < 85) perfClass = 'medium';
+
+                const improvementNote = play.needsWork ? 
+                    `<div class="improvement-note">⚠ Needs improvement - ${100 - play.performance}% room to grow</div>` : '';
+
+                playCard.innerHTML = `
+                    <div class="play-card-header">
+                        <div>
+                            <div class="play-name">${play.name}</div>
+                            <div style="font-size: 0.85rem; color: #888888; margin-top: 0.25rem;">${play.difficulty} • ${play.attempts} attempts</div>
+                        </div>
+                        <div class="play-type-badge">${play.type}</div>
+                    </div>
+                    
+                    <div class="play-stats-mini">
+                        <div class="mini-stat">
+                            <div class="mini-stat-label">Avg Yards</div>
+                            <div class="mini-stat-value">${play.avgYards}</div>
+                        </div>
+                        <div class="mini-stat">
+                            <div class="mini-stat-label">Difficulty</div>
+                            <div class="mini-stat-value">${play.difficulty}</div>
+                        </div>
+                    </div>
+
+                    <div class="performance-bar-container">
+                        <div class="performance-label">
+                            <span class="performance-label-text">Success Rate</span>
+                            <span class="performance-percentage ${perfClass}">${play.performance}%</span>
+                        </div>
+                        <div class="performance-bar">
+                            <div class="performance-bar-fill ${perfClass}" style="width: ${play.performance}%"></div>
+                        </div>
+                        ${improvementNote}
+                    </div>
+                `;
+
+                playsGrid.appendChild(playCard);
+            });
+        }
+
+        // Handle play selection
+        function selectPlay(play) {
+            console.log('Selected play:', play.name);
+            alert(`Loading training session: ${play.name}\n\nSuccess Rate: ${play.performance}%\nAttempts: ${play.attempts}\nDifficulty: ${play.difficulty}`);
+        }
+
+        // Generate random training data for Brock Purdy
+        function generatePlayData() {
+            const playTypes = [
+                { name: 'Pass (Slant)', success: [88, 95] },
+                { name: 'Pass (Out)', success: [82, 92] },
+                { name: 'Pass (Corner)', success: [85, 94] },
+                { name: 'Pass (Deep)', success: [75, 88] },
+                { name: 'Screen Pass', success: [90, 97] },
+                { name: 'Play Action', success: [86, 93] },
+                { name: 'RPO', success: [80, 91] },
+                { name: 'Bootleg', success: [83, 90] }
+            ];
+
+            const downs = ['1st & 10', '2nd & 7', '2nd & 5', '3rd & 3', '3rd & 8', '2nd & 12'];
+            const yardages = [3, 5, 7, 8, 10, 12, 15, 18, 22, 25];
+
+            const play = playTypes[Math.floor(Math.random() * playTypes.length)];
+            const successRate = Math.floor(Math.random() * (play.success[1] - play.success[0] + 1)) + play.success[0];
+            
+            return {
+                type: play.name,
+                down: downs[Math.floor(Math.random() * downs.length)],
+                yards: yardages[Math.floor(Math.random() * yardages.length)],
+                success: successRate,
+                time: new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })
+            };
+        }
+
+        // Populate recent plays list
+        function populateRecentPlays() {
+            const playList = document.getElementById('playList');
+            if (!playList) return;
+
+            playList.innerHTML = '';
+            
+            for (let i = 0; i < 10; i++) {
+                const play = generatePlayData();
+                const playItem = document.createElement('div');
+                playItem.className = 'play-item';
+                
+                let successClass = 'play-item-success';
+                if (play.success < 80) successClass += ' low';
+                else if (play.success < 90) successClass += ' medium';
+                
+                playItem.innerHTML = `
+                    <div class="play-item-info">
+                        <div class="play-item-type">${play.type}</div>
+                        <div class="play-item-details">${play.down} • ${play.yards > 0 ? '+' : ''}${play.yards} yds • ${play.time}</div>
+                    </div>
+                    <div class="${successClass}">${play.success}%</div>
+                `;
+                
+                playList.appendChild(playItem);
+            }
+        }
+
+        // Draw line chart for success rate over time
+        function drawLineChart() {
+            const canvas = document.getElementById('lineChart');
+            if (!canvas) return;
+
+            const ctx = canvas.getContext('2d');
+            const width = canvas.width = canvas.offsetWidth;
+            const height = canvas.height = canvas.offsetHeight;
+
+            ctx.clearRect(0, 0, width, height);
+
+            // Generate sample data points
+            const dataPoints = [];
+            for (let i = 0; i < 12; i++) {
+                dataPoints.push(82 + Math.random() * 15);
+            }
+
+            const padding = 40;
+            const chartWidth = width - padding * 2;
+            const chartHeight = height - padding * 2;
+
+            // Draw axes
+            ctx.strokeStyle = '#2a2a2a';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(padding, padding);
+            ctx.lineTo(padding, height - padding);
+            ctx.lineTo(width - padding, height - padding);
+            ctx.stroke();
+
+            // Draw grid lines
+            ctx.strokeStyle = '#1a1a1a';
+            ctx.lineWidth = 1;
+            for (let i = 0; i <= 5; i++) {
+                const y = padding + (chartHeight / 5) * i;
+                ctx.beginPath();
+                ctx.moveTo(padding, y);
+                ctx.lineTo(width - padding, y);
+                ctx.stroke();
+            }
+
+            // Draw y-axis labels
+            ctx.fillStyle = '#666666';
+            ctx.font = '11px Inter, sans-serif';
+            ctx.textAlign = 'right';
+            for (let i = 0; i <= 5; i++) {
+                const value = 100 - (i * 4);
+                const y = padding + (chartHeight / 5) * i;
+                ctx.fillText(`${value}%`, padding - 10, y + 4);
+            }
+
+            // Draw line
+            ctx.strokeStyle = '#0066cc';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+
+            dataPoints.forEach((point, i) => {
+                const x = padding + (chartWidth / (dataPoints.length - 1)) * i;
+                const y = height - padding - ((point - 80) / 20) * chartHeight;
+                
+                if (i === 0) {
+                    ctx.moveTo(x, y);
+                } else {
+                    ctx.lineTo(x, y);
+                }
+            });
+
+            ctx.stroke();
+
+            // Draw data points
+            ctx.fillStyle = '#0066cc';
+            dataPoints.forEach((point, i) => {
+                const x = padding + (chartWidth / (dataPoints.length - 1)) * i;
+                const y = height - padding - ((point - 80) / 20) * chartHeight;
+                
+                ctx.beginPath();
+                ctx.arc(x, y, 4, 0, Math.PI * 2);
+                ctx.fill();
+            });
+
+            // Draw x-axis labels
+            ctx.fillStyle = '#666666';
+            ctx.font = '10px Inter, sans-serif';
+            ctx.textAlign = 'center';
+            const weeks = ['W1', 'W2', 'W3', 'W4', 'W5', 'W6', 'W7', 'W8', 'W9', 'W10', 'W11', 'W12'];
+            weeks.forEach((week, i) => {
+                const x = padding + (chartWidth / (weeks.length - 1)) * i;
+                ctx.fillText(week, x, height - padding + 20);
+            });
+        }
+
+        // Draw pie chart for play type distribution
+        function drawPieChart() {
+            const canvas = document.getElementById('pieChart');
+            if (!canvas) return;
+
+            const ctx = canvas.getContext('2d');
+            const width = canvas.width = canvas.offsetWidth;
+            const height = canvas.height = canvas.offsetHeight;
+
+            ctx.clearRect(0, 0, width, height);
+
+            const data = [
+                { label: 'Slant', value: 28, color: '#0066cc' },
+                { label: 'Out', value: 22, color: '#0088ff' },
+                { label: 'Corner', value: 18, color: '#00aaff' },
+                { label: 'Deep', value: 15, color: '#666666' },
+                { label: 'Screen', value: 12, color: '#888888' },
+                { label: 'Other', value: 5, color: '#aaaaaa' }
+            ];
+
+            const total = data.reduce((sum, item) => sum + item.value, 0);
+            const centerX = width / 2;
+            const centerY = height / 2 - 10;
+            const radius = Math.min(width, height) / 2.5;
+
+            let currentAngle = -Math.PI / 2;
+
+            data.forEach(item => {
+                const sliceAngle = (item.value / total) * Math.PI * 2;
+
+                // Draw slice
+                ctx.fillStyle = item.color;
+                ctx.beginPath();
+                ctx.moveTo(centerX, centerY);
+                ctx.arc(centerX, centerY, radius, currentAngle, currentAngle + sliceAngle);
+                ctx.closePath();
+                ctx.fill();
+
+                // Draw label
+                const labelAngle = currentAngle + sliceAngle / 2;
+                const labelX = centerX + Math.cos(labelAngle) * (radius * 0.7);
+                const labelY = centerY + Math.sin(labelAngle) * (radius * 0.7);
+
+                ctx.fillStyle = '#ffffff';
+                ctx.font = 'bold 11px Inter, sans-serif';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(`${item.value}%`, labelX, labelY);
+
+                currentAngle += sliceAngle;
+            });
+
+            // Draw legend
+            let legendY = 20;
+            data.forEach(item => {
+                ctx.fillStyle = item.color;
+                ctx.fillRect(width - 80, legendY, 12, 12);
+                
+                ctx.fillStyle = '#ffffff';
+                ctx.font = '11px Inter, sans-serif';
+                ctx.textAlign = 'left';
+                ctx.fillText(item.label, width - 62, legendY + 9);
+                
+                legendY += 20;
+            });
+        }
+
+        // Draw football play diagram
+        function drawPlayDiagram() {
+            const canvas = document.getElementById('playCanvas');
+            if (!canvas) return;
+            
+            const ctx = canvas.getContext('2d');
+            const width = canvas.width = canvas.offsetWidth;
+            const height = canvas.height = canvas.offsetHeight;
+            
+            // Clear canvas
+            ctx.clearRect(0, 0, width, height);
+            
+            // Draw yard lines (subtle)
+            ctx.strokeStyle = '#1a1a1a';
+            ctx.lineWidth = 1;
+            for (let i = 0; i < 5; i++) {
+                const y = (height / 5) * (i + 1);
+                ctx.beginPath();
+                ctx.moveTo(0, y);
+                ctx.lineTo(width, y);
+                ctx.stroke();
+            }
+            
+            // Line of scrimmage
+            const losY = height * 0.5;
+            ctx.strokeStyle = '#0066cc';
+            ctx.lineWidth = 2;
+            ctx.setLineDash([5, 5]);
+            ctx.beginPath();
+            ctx.moveTo(0, losY);
+            ctx.lineTo(width, losY);
+            ctx.stroke();
+            ctx.setLineDash([]);
+            
+            // Starting positions (O-line)
+            const startY = losY;
+            const centerX = width / 2;
+            
+            // Draw offensive line (circles)
+            ctx.fillStyle = '#ffffff';
+            for (let i = -2; i <= 2; i++) {
+                ctx.beginPath();
+                ctx.arc(centerX + (i * 40), startY, 6, 0, Math.PI * 2);
+                ctx.fill();
+            }
+            
+            // Draw QB (slightly behind center)
+            ctx.fillStyle = '#0066cc';
+            ctx.beginPath();
+            ctx.arc(centerX, startY + 30, 8, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Draw receivers and routes
+            const routes = [
+                // Left slant route (primary)
+                { startX: centerX - 120, color: '#0066cc', type: 'slant' },
+                // Right out route
+                { startX: centerX + 120, color: '#666666', type: 'out' },
+                // Slot receiver - corner route
+                { startX: centerX - 60, color: '#666666', type: 'corner' }
+            ];
+            
+            routes.forEach(route => {
+                // Draw receiver starting position
+                ctx.fillStyle = route.color;
+                ctx.beginPath();
+                ctx.arc(route.startX, startY, 6, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Draw route
+                ctx.strokeStyle = route.color;
+                ctx.lineWidth = 2.5;
+                ctx.beginPath();
+                ctx.moveTo(route.startX, startY);
+                
+                if (route.type === 'slant') {
+                    // Slant route - go straight then diagonal
+                    ctx.lineTo(route.startX, startY - 40);
+                    ctx.lineTo(route.startX + 80, startY - 100);
+                    
+                    // Draw arrow at end
+                    const endX = route.startX + 80;
+                    const endY = startY - 100;
+                    ctx.lineTo(endX, endY);
+                    ctx.stroke();
+                    
+                    // Arrow head
+                    ctx.fillStyle = route.color;
+                    ctx.beginPath();
+                    ctx.moveTo(endX, endY);
+                    ctx.lineTo(endX - 6, endY + 8);
+                    ctx.lineTo(endX + 2, endY + 4);
+                    ctx.closePath();
+                    ctx.fill();
+                } else if (route.type === 'out') {
+                    // Out route - straight then horizontal
+                    ctx.lineTo(route.startX, startY - 60);
+                    ctx.lineTo(route.startX + 60, startY - 60);
+                    ctx.stroke();
+                    
+                    // Arrow head
+                    ctx.fillStyle = route.color;
+                    ctx.beginPath();
+                    ctx.moveTo(route.startX + 60, startY - 60);
+                    ctx.lineTo(route.startX + 52, startY - 66);
+                    ctx.lineTo(route.startX + 52, startY - 54);
+                    ctx.closePath();
+                    ctx.fill();
+                } else if (route.type === 'corner') {
+                    // Corner route - straight then diagonal out
+                    ctx.lineTo(route.startX, startY - 50);
+                    ctx.lineTo(route.startX - 50, startY - 90);
+                    ctx.stroke();
+                    
+                    // Arrow head
+                    ctx.fillStyle = route.color;
+                    ctx.beginPath();
+                    ctx.moveTo(route.startX - 50, startY - 90);
+                    ctx.lineTo(route.startX - 42, startY - 86);
+                    ctx.lineTo(route.startX - 48, startY - 82);
+                    ctx.closePath();
+                    ctx.fill();
+                }
+            });
+            
+            // Add label
+            ctx.fillStyle = '#555555';
+            ctx.font = '11px Inter, sans-serif';
+            ctx.fillText('LOS', 10, losY - 8);
+        }
+
+        // Feature tile click handler
+        function handleFeatureClick(feature) {
+            console.log(`${feature} feature clicked`);
+            
+            // Add visual feedback
+            event.currentTarget.style.opacity = '0.7';
+            setTimeout(() => {
+                event.currentTarget.style.opacity = '1';
+            }, 150);
+
+            // Handle navigation
+            if (feature === 'next') {
+                document.getElementById('mainDashboard').style.display = 'none';
+                document.getElementById('analyticsDashboard').classList.remove('active');
+                document.getElementById('recentPlaysPage').classList.remove('active');
+                document.getElementById('nextPlayPage').classList.add('active');
+                generatePlayCards();
+            } else if (feature === 'recent') {
+                document.getElementById('mainDashboard').style.display = 'none';
+                document.getElementById('analyticsDashboard').classList.remove('active');
+                document.getElementById('nextPlayPage').classList.remove('active');
+                document.getElementById('recentPlaysPage').classList.add('active');
+                generateRecentPlaysList();
+            } else if (feature === 'analytics') {
+                document.getElementById('mainDashboard').style.display = 'none';
+                document.getElementById('nextPlayPage').classList.remove('active');
+                document.getElementById('recentPlaysPage').classList.remove('active');
+                document.getElementById('analyticsDashboard').classList.add('active');
+                
+                // Draw charts
+                setTimeout(() => {
+                    drawLineChart();
+                    drawPieChart();
+                }, 50);
+            }
+        }
+
+        // Speed selector handler
+        function setSpeed(speed) {
+            // Remove active class from all buttons
+            document.querySelectorAll('.speed-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            // Add active class to clicked button
+            event.currentTarget.classList.add('active');
+            console.log(`Training speed set to ${speed}x`);
+        }
+
+        // Back to main dashboard
+        function backToDashboard() {
+            document.getElementById('mainDashboard').style.display = 'grid';
+            document.getElementById('analyticsDashboard').classList.remove('active');
+            document.getElementById('nextPlayPage').classList.remove('active');
+            document.getElementById('recentPlaysPage').classList.remove('active');
+            document.getElementById('playersPage').classList.remove('active');
+            
+            // Redraw play diagram
+            setTimeout(() => {
+                drawPlayDiagram();
+            }, 50);
+        }
+
+        // Initialize canvas on load
+        window.addEventListener('load', () => {
+            drawPlayDiagram();
+            populateRecentPlays();
+        });
+
+        // Redraw on window resize
+        window.addEventListener('resize', () => {
+            drawPlayDiagram();
+            if (document.getElementById('analyticsDashboard').classList.contains('active')) {
+                drawLineChart();
+                drawPieChart();
+            }
+        });
+    </script>value}%`, labelX, labelY);
+
+                currentAngle += sliceAngle;
+            });
+
+            // Draw legend
+            let legendY = 20;
+            data.forEach(item => {
+                ctx.fillStyle = item.color;
+                ctx.fillRect(width - 80, legendY, 12, 12);
+                
+                ctx.fillStyle = '#ffffff';
+                ctx.font = '11px Inter, sans-serif';
+                ctx.textAlign = 'left';
+                ctx.fillText(item.label, width - 62, legendY + 9);
+                
+                legendY += 20;
+            });
+        }
+
+        // Draw football play diagram
+        function drawPlayDiagram() {
+            const canvas = document.getElementById('playCanvas');
+            if (!canvas) return;
+            
+            const ctx = canvas.getContext('2d');
+            const width = canvas.width = canvas.offsetWidth;
+            const height = canvas.height = canvas.offsetHeight;
+            
+            // Clear canvas
+            ctx.clearRect(0, 0, width, height);
+            
+            // Draw yard lines (subtle)
+            ctx.strokeStyle = '#1a1a1a';
+            ctx.lineWidth = 1;
+            for (let i = 0; i < 5; i++) {
+                const y = (height / 5) * (i + 1);
+                ctx.beginPath();
+                ctx.moveTo(0, y);
+                ctx.lineTo(width, y);
+                ctx.stroke();
+            }
+            
+            // Line of scrimmage
+            const losY = height * 0.5;
+            ctx.strokeStyle = '#0066cc';
+            ctx.lineWidth = 2;
+            ctx.setLineDash([5, 5]);
+            ctx.beginPath();
+            ctx.moveTo(0, losY);
+            ctx.lineTo(width, losY);
+            ctx.stroke();
+            ctx.setLineDash([]);
+            
+            // Starting positions (O-line)
+            const startY = losY;
+            const centerX = width / 2;
+            
+            // Draw offensive line (circles)
+            ctx.fillStyle = '#ffffff';
+            for (let i = -2; i <= 2; i++) {
+                ctx.beginPath();
+                ctx.arc(centerX + (i * 40), startY, 6, 0, Math.PI * 2);
+                ctx.fill();
+            }
+            
+            // Draw QB (slightly behind center)
+            ctx.fillStyle = '#0066cc';
+            ctx.beginPath();
+            ctx.arc(centerX, startY + 30, 8, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Draw receivers and routes
+            const routes = [
+                // Left slant route (primary)
+                { startX: centerX - 120, color: '#0066cc', type: 'slant' },
+                // Right out route
+                { startX: centerX + 120, color: '#666666', type: 'out' },
+                // Slot receiver - corner route
+                { startX: centerX - 60, color: '#666666', type: 'corner' }
+            ];
+            
+            routes.forEach(route => {
+                // Draw receiver starting position
+                ctx.fillStyle = route.color;
+                ctx.beginPath();
+                ctx.arc(route.startX, startY, 6, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Draw route
+                ctx.strokeStyle = route.color;
+                ctx.lineWidth = 2.5;
+                ctx.beginPath();
+                ctx.moveTo(route.startX, startY);
+                
+                if (route.type === 'slant') {
+                    // Slant route - go straight then diagonal
+                    ctx.lineTo(route.startX, startY - 40);
+                    ctx.lineTo(route.startX + 80, startY - 100);
+                    
+                    // Draw arrow at end
+                    const endX = route.startX + 80;
+                    const endY = startY - 100;
+                    ctx.lineTo(endX, endY);
+                    ctx.stroke();
+                    
+                    // Arrow head
+                    ctx.fillStyle = route.color;
+                    ctx.beginPath();
+                    ctx.moveTo(endX, endY);
+                    ctx.lineTo(endX - 6, endY + 8);
+                    ctx.lineTo(endX + 2, endY + 4);
+                    ctx.closePath();
+                    ctx.fill();
+                } else if (route.type === 'out') {
+                    // Out route - straight then horizontal
+                    ctx.lineTo(route.startX, startY - 60);
+                    ctx.lineTo(route.startX + 60, startY - 60);
+                    ctx.stroke();
+                    
+                    // Arrow head
+                    ctx.fillStyle = route.color;
+                    ctx.beginPath();
+                    ctx.moveTo(route.startX + 60, startY - 60);
+                    ctx.lineTo(route.startX + 52, startY - 66);
+                    ctx.lineTo(route.startX + 52, startY - 54);
+                    ctx.closePath();
+                    ctx.fill();
+                } else if (route.type === 'corner') {
+                    // Corner route - straight then diagonal out
+                    ctx.lineTo(route.startX, startY - 50);
+                    ctx.lineTo(route.startX - 50, startY - 90);
+                    ctx.stroke();
+                    
+                    // Arrow head
+                    ctx.fillStyle = route.color;
+                    ctx.beginPath();
+                    ctx.moveTo(route.startX - 50, startY - 90);
+                    ctx.lineTo(route.startX - 42, startY - 86);
+                    ctx.lineTo(route.startX - 48, startY - 82);
+                    ctx.closePath();
+                    ctx.fill();
+                }
+            });
+            
+            // Add label
+            ctx.fillStyle = '#555555';
+            ctx.font = '11px Inter, sans-serif';
+            ctx.fillText('LOS', 10, losY - 8);
+        }
+
+        // Feature tile click handler
+        function handleFeatureClick(feature) {
+            console.log(`${feature} feature clicked`);
+            
+            // Add visual feedback
+            event.currentTarget.style.opacity = '0.7';
+            setTimeout(() => {
+                event.currentTarget.style.opacity = '1';
+            }, 150);
+
+            // Handle analytics dashboard
+            if (feature === 'analytics') {
+                document.getElementById('mainDashboard').style.display = 'none';
+                document.getElementById('analyticsDashboard').classList.add('active');
+                
+                // Draw charts
+                setTimeout(() => {
+                    drawLineChart();
+                    drawPieChart();
+                }, 50);
+            }
+        }
+
+        // Speed selector handler
+        function setSpeed(speed) {
+            // Remove active class from all buttons
+            document.querySelectorAll('.speed-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            // Add active class to clicked button
+            event.currentTarget.classList.add('active');
+            console.log(`Training speed set to ${speed}x`);
+        }
+
+        // Back to main dashboard
+        function backToDashboard() {
+            document.getElementById('mainDashboard').style.display = 'grid';
+            document.getElementById('analyticsDashboard').classList.remove('active');
+            
+            // Redraw play diagram
+            setTimeout(() => {
+                drawPlayDiagram();
+            }, 50);
+        }
+
+        // Initialize canvas on load
+        window.addEventListener('load', () => {
+            drawPlayDiagram();
+            populateRecentPlays();
+        });
+
+        // Redraw on window resize
+        window.addEventListener('resize', () => {
+            drawPlayDiagram();
+            if (document.getElementById('analyticsDashboard').classList.contains('active')) {
+                drawLineChart();
+                drawPieChart();
+            }
+        });
+    </script>
+</body>
+</html>
